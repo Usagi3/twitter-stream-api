@@ -1,6 +1,4 @@
 <?php
 namespace Phirehose\Exceptions;
 
-use Exceptions;
-
-class PhirehoseException extends Exception {}
+class PhirehoseException extends \Exception {}

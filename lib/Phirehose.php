@@ -1,7 +1,6 @@
 <?php
 namespace Phirehose;
 
-use Phirehose\Exceptions\PhirehoseConnectLimitExceeded;
 /**
  * A class that makes it easy to connect to and consume the Twitter stream via the Streaming API.
  *
@@ -654,7 +653,7 @@ abstract class Phirehose
         if ($connectFailures > $this->connectFailuresMax) {
           $msg = 'TCP failure limit exceeded with ' . $connectFailures . ' failures. Last error: ' . $errStr;
           $this->log($msg,'error');
-          throw new PhirehoseConnectLimitExceeded($msg, $errNo); // Throw an exception for other code to handle
+          throw new Exceptions\PhirehoseConnectLimitExceeded($msg, $errNo); // Throw an exception for other code to handle
         }
         // Increase retry/backoff up to max
         $tcpRetry = ($tcpRetry < $this->tcpBackoffMax) ? $tcpRetry * 2 : $this->tcpBackoffMax;
@@ -729,7 +728,7 @@ abstract class Phirehose
         if ($connectFailures > $this->connectFailuresMax) {
           $msg = 'Connection failure limit exceeded with ' . $connectFailures . ' failures. Last error: ' . $errStr;
           $this->log($msg,'error');
-          throw new PhirehoseConnectLimitExceeded($msg, $httpCode); // We eventually throw an exception for other code to handle          
+          throw new Exceptions\PhirehoseConnectLimitExceeded($msg, $httpCode); // We eventually throw an exception for other code to handle
         }
         // Increase retry/backoff up to max
         $httpRetry = ($httpRetry < $this->httpBackoffMax) ? $httpRetry * 2 : $this->httpBackoffMax;
@@ -740,7 +739,7 @@ abstract class Phirehose
         
       } // End if not http 200
     else{
-      if(!$isChunking)throw new Exception("Twitter did not send a chunking header. Is this really HTTP/1.1? Here are headers:\n$respHeaders");   //TODO: rather crude!
+      if(!$isChunking)throw new \Exception("Twitter did not send a chunking header. Is this really HTTP/1.1? Here are headers:\n$respHeaders");   //TODO: rather crude!
       }
 
       // Loop until connected OK
@@ -765,7 +764,7 @@ abstract class Phirehose
 
 	protected function getAuthorizationHeader($url,$requestParams)
 	{
-        throw new Exception("Basic auth no longer works with Twitter. You must derive from OauthPhirehose, not directly from the Phirehose class.");
+        throw new \Exception("Basic auth no longer works with Twitter. You must derive from OauthPhirehose, not directly from the Phirehose class.");
 		$authCredentials = base64_encode($this->username . ':' . $this->password);
 		return "Basic: ".$authCredentials;
 	}
