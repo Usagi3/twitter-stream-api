@@ -1,5 +1,5 @@
 {
-    "name": "fennb/phirehose",
+    "name": "usagi3/phirehose",
     "description": "A PHP interface to the Twitter Streaming API.",
     "keywords": ["phirehose", "php", "twitter", "streaming", "api"],
     "type": "library",
