@@ -529,19 +529,19 @@ abstract class Phirehose
       }
 
       if ($this->performSocketDisconnect) {
-          // Disconnect the socket with a signal
-          $reconnect = $this->reconnect;
-          $this->disconnect();
-          $this->reconnect = $reconnect;
-          $this->performSocketDisconnect = false;
-          $this->lastErrorNo = NULL;
-          $this->lastErrorMsg = 'Socket disconnected';
-          $this->log('Phirehose connection: ' . $this->lastErrorMsg,'info');
+        // Disconnect the socket with a signal
+        $reconnect = $this->reconnect;
+        $this->disconnect();
+        $this->reconnect = $reconnect;
+        $this->performSocketDisconnect = false;
+        $this->lastErrorNo = NULL;
+        $this->lastErrorMsg = 'Socket disconnected';
+        $this->log('Phirehose connection: ' . $this->lastErrorMsg,'info');
       } else {
-          // Some sort of socket error has occurred
-          $this->lastErrorNo = is_resource($this->conn) ? @socket_last_error() : NULL;
-          $this->lastErrorMsg = ($this->lastErrorNo > 0) ? @socket_strerror($this->lastErrorNo) : 'Socket disconnected';
-          $this->log('Phirehose connection error occured: ' . $this->lastErrorMsg,'error');
+        // Some sort of socket error has occurred
+        $this->lastErrorNo = is_resource($this->conn) ? @socket_last_error() : NULL;
+        $this->lastErrorMsg = ($this->lastErrorNo > 0) ? @socket_strerror($this->lastErrorNo) : 'Socket disconnected';
+        $this->log('Phirehose connection error occured: ' . $this->lastErrorMsg,'error');
       }
 
       // Reconnect
