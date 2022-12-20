@@ -160,7 +160,8 @@ abstract class Phirehose
   protected $httpBackoffMax  = 240;
   protected $hostPort = 80;
   protected $secureHostPort = 443;
-  
+  protected $performSocketDisconnect = false;
+
   /**
    * Create a new Phirehose object attached to the appropriate twitter stream method.
    * Methods are: METHOD_FIREHOSE, METHOD_RETWEET, METHOD_SAMPLE, METHOD_FILTER, METHOD_LINKS, METHOD_USER, METHOD_SITE. Note: the method might cause the use of a different endpoint URL.
@@ -527,10 +528,21 @@ abstract class Phirehose
         pcntl_signal_dispatch();
       }
 
-      // Some sort of socket error has occurred
-      $this->lastErrorNo = is_resource($this->conn) ? @socket_last_error() : NULL;
-      $this->lastErrorMsg = ($this->lastErrorNo > 0) ? @socket_strerror($this->lastErrorNo) : 'Socket disconnected';
-      $this->log('Phirehose connection error occured: ' . $this->lastErrorMsg,'error');
+      if ($this->performSocketDisconnect) {
+          // Disconnect the socket with a signal
+          $reconnect = $this->reconnect;
+          $this->disconnect();
+          $this->reconnect = $reconnect;
+          $this->performSocketDisconnect = false;
+          $this->lastErrorNo = NULL;
+          $this->lastErrorMsg = 'Socket disconnected';
+          $this->log('Phirehose connection: ' . $this->lastErrorMsg,'info');
+      } else {
+          // Some sort of socket error has occurred
+          $this->lastErrorNo = is_resource($this->conn) ? @socket_last_error() : NULL;
+          $this->lastErrorMsg = ($this->lastErrorNo > 0) ? @socket_strerror($this->lastErrorNo) : 'Socket disconnected';
+          $this->log('Phirehose connection error occured: ' . $this->lastErrorMsg,'error');
+      }
 
       // Reconnect
     } while ($this->reconnect);
