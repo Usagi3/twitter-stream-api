@@ -42,6 +42,10 @@ class TwitterStream
             $char  = $this->streamConnection->read(1);
             $tweet = $char;
 
+            if (! isset($tweet[-1])) {
+                throw new \RuntimeException('Stream error.');
+            }
+
             while ($char !== "\n" && $tweet[-1] !== "\r") {
                 $char = $this->streamConnection->read(1);
                 $tweet .= $char;
