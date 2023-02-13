@@ -1,5 +1,5 @@
 {
-  "name": "redwebcreation/twitter-stream-api",
+  "name": "usagi3/twitter-stream-api",
   "description": "Consume the Twitter Stream API in real-time.",
   "keywords": ["phirehose", "php", "twitter", "streaming", "api"],
   "type": "library",
